@@ -14,9 +14,11 @@ verustype="verus"
 if [ ${verustype} == "verus" ]; then
     datadir="VRSC"
     sitecheck="https://insight.verus.io"
+    check_prefix="vrsc"
 elif [ ${verustype} == "verustest" ]; then
-    datadir="VRSCTEST"
-    sitecheck="https://testex.verus.io"
+    datadir="vrsctest"
+    sitecheck="https://testex.verus.io"\
+    check_prefix="vrsctest"
 else
     echo "Unknown verustype"
     exit 1
@@ -55,13 +57,13 @@ chown -R zabbix:zabbix /var/log/zabbix
 
 #Add in the verus specific config(s), comment this out and use a different script if a webserver/non-daemon machine
 cat << EOF >> /etc/zabbix/zabbix_agentd.conf.d/${verustype}-daemon.conf
-UserParameter=vrsc.height,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .blocks
-UserParameter=vrsc.hash,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getbestblockhash
-UserParameter=vrsc.connections,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .connections
-UserParameter=vrsc.version,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .VRSCversion
-UserParameter=vrsc.runningcheck,/etc/zabbix/zabbix_agentd.conf.d/verus_running.sh
-UserParameter=vrsc.heightdiff,local=\$(/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .blocks); remote=\$(curl --silent ${sitecheck}/api/getblockcount); echo "\${local}-\${remote}" | bc | tr -d -
-UserParameter=vrsc.hashmatch,/etc/zabbix/zabbix_agentd.conf.d/verus-hashdiff.sh
+UserParameter=${check_prefix}.height,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .blocks
+UserParameter=${check_prefix}.hash,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getbestblockhash
+UserParameter=${check_prefix}.connections,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .connections
+UserParameter=${check_prefix}.version,/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .VRSCversion
+UserParameter=${check_prefix}.runningcheck,/etc/zabbix/zabbix_agentd.conf.d/verus_running.sh
+UserParameter=${check_prefix}.heightdiff,local=\$(/home/${verustype}/bin/${verustype} -datadir=/home/${verustype}/.komodo/${datadir} getinfo | jq .blocks); remote=\$(curl --silent ${sitecheck}/api/getblockcount); echo "\${local}-\${remote}" | bc | tr -d -
+UserParameter=${check_prefix}.hashmatch,/etc/zabbix/zabbix_agentd.conf.d/verus-hashdiff.sh
 EOF
 
 #Add script to verify verus is runnning
