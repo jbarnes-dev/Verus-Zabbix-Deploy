@@ -3,9 +3,9 @@
 # All that's needed is the conf file with the variable flag/identifier to then pass the desired chain server-side
 
 pbaas_chain=$1
-verustest='/home/verustest/bin/verus -datadir=/home/verustest/.komodo/vrsctest -testnet'
-pbaas_hex=$($verustest getvdxfid "$pbaas_chain@" | jq -r '.hash160result')
-pbaas_call="/home/verustest/bin/verus -datadir=/home/bridgekeeper/.verustest/pbaas/$pbaas_hex -testnet -chain=$pbaas_chain -conf=/home/bridgekeeper/.verustest/pbaas/${pbaas_hex}/${pbaas_hex}.conf"
+verus='/home/verus/bin/verus -datadir=/home/verus/.komodo/VRSC '
+pbaas_hex=$($verus getvdxfid "$pbaas_chain@" | jq -r '.hash160result')
+pbaas_call="/home/verus/bin/verus -datadir=/home/verus/.verus/pbaas/$pbaas_hex  -chain=$pbaas_chain -conf=/home/verus/.verus/pbaas/${pbaas_hex}/${pbaas_hex}.conf"
 if [ $2 == "height" ]; then
 	$pbaas_call getinfo | jq -r '.blocks'
 fi
