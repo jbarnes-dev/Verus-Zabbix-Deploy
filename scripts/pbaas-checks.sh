@@ -5,7 +5,7 @@
 pbaas_chain=$1
 verus='/home/verus/bin/verus -datadir=/home/verus/.komodo/VRSC '
 pbaas_hex=$($verus getvdxfid "$pbaas_chain@" | jq -r '.hash160result')
-pbaas_call="/home/verus/bin/verus -datadir=/home/verus/.verus/pbaas/$pbaas_hex  -chain=$pbaas_chain -conf=/home/verus/.verus/pbaas/${pbaas_hex}/${pbaas_hex}.conf"
+pbaas_call="/home/verus/bin/verus -datadir=/home/verus/.verus/pbaas/ -chain=$pbaas_chain -conf=/home/verus/.verus/pbaas/${pbaas_hex}/${pbaas_hex}.conf"
 if [ $2 == "height" ]; then
 	$pbaas_call getinfo | jq -r '.blocks'
 fi
