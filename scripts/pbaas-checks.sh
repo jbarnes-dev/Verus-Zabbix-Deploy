@@ -12,6 +12,7 @@ explorer_urls=(
 
 # Which chain
 pbaas_chain=$1
+verus='/home/verus/bin/verus -datadir=/home/verus/.komodo/VRSC'
 
 # Function for passing requests to the daemon for the pbaas chain (general)
 pbaas_call() {
@@ -47,6 +48,22 @@ elif [ $2 == "height" ]; then
 	pbaas_call getinfo | jq -r '.blocks'
 elif [ $2 == "hash" ]; then
 	pbaas_call getbestblockhash
+if [ $2 == "chainforks" ]; then
+	$pbaas_call getnotarizationdata VRSC | jq '.forks[0] | length'
+elif [ $2 == "chainmodulo" ]; then
+	$pbaas_call getnotarizationdata VRSC | jq '.notarizationmodulo'
+elif [ $2 == "verusforks" ]; then
+	$verus getnotarizationdata $pbaas_chain | jq '.forks[0] | length'
+elif [ $2 == "verusmodulo" ]; then
+	$verus getnotarizationdata $pbaas_chain | jq '.notarizationmodulo'
+elif [ $2 == "totalforkscheck" ]; then
+	verustotalforks=$($verus getnotarizationdata $pbaas_chain | jq '.forks | length')
+	chaintotalforks=$($pbaas_call getnotarizationdata vrsctest | jq '.forks | length')
+	if [ $verustotalforks -gt 1 ] || [ $chaintotalforks -gt 1 ]; then
+		echo 1
+	else
+		echo 0
+	fi
 elif [ $2 == "heightcheck" ]; then
     echo "Not yet implemented"
 elif [ $2 == "hashcheck" ]; then
