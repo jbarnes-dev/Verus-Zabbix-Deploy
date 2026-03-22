@@ -57,6 +57,8 @@ cp -r ./configs/* /etc/zabbix/zabbix_agentd.conf.d
 cp -r ./scripts/* /etc/zabbix/zabbix_agentd.conf.d
 chmod +x /etc/zabbix/zabbix_agentd.conf.d/*.sh
 
+
 # Finish up
 
 echo "Base Zabbix-agent configured"
+echo "Add $zabbixserverip to firewall allow list for your desired port(s)"
