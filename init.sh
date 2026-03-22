@@ -52,6 +52,11 @@ mkdir -p /etc/zabbix/zabbix_agentd.d
 mkdir -p /var/log/zabbix/
 chown -R zabbix:zabbix /var/log/zabbix
 
+# Copy configs (just assume all needed)
+cp -r ./configs/* /etc/zabbix/zabbix_agentd.conf.d
+cp -r ./scripts/* /etc/zabbix/zabbix_agentd.conf.d
+chmod +x /etc/zabbix/zabbix_agentd.conf.d/*.sh
+
 # Finish up
 
 echo "Base Zabbix-agent configured"
