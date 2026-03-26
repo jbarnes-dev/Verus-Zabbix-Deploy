@@ -51,7 +51,8 @@ mkdir -p /etc/zabbix/zabbix_agentd.conf.d
 mkdir -p /etc/zabbix/zabbix_agentd.d
 mkdir -p /var/log/zabbix/
 chown -R zabbix:zabbix /var/log/zabbix
-
+# Fix permissions for scripts like pbaas checks
+chown zabbix:zabbix /etc/zabbix/zabbix_agentd.conf.d
 # Copy configs (just assume all needed)
 cp -r ./configs/* /etc/zabbix/zabbix_agentd.conf.d
 cp -r ./scripts/* /etc/zabbix/zabbix_agentd.conf.d
