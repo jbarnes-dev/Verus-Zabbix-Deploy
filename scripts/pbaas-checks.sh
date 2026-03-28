@@ -3,7 +3,7 @@
 # All that's needed is the conf file with the variable flag/identifier to then pass the desired chain server-side
 
 # Array to map chain name to explorer URL for external checks
-# NOTE: vARRR/CHIPS currently does not have the API exposed or enabled. 
+# NOTE: vARRR/CHIPS currently does not have the API exposed or enabled.
 explorer_urls=(
     #[vARRR]="https://varrrexplorer.piratechain.com/"
     [vDEX]="https://explorer.vdex.to"
@@ -56,9 +56,19 @@ elif [ $2 == "verusforks" ]; then
 	$verus getnotarizationdata $pbaas_chain | jq '.forks[0] | length'
 elif [ $2 == "verusmodulo" ]; then
 	$verus getnotarizationdata $pbaas_chain | jq '.notarizationmodulo'
+elif [ $2 == "chainnotarizationdelta" ]; then
+	verusnotarization=$($verus getnotarizationdata $pbaas_chain | jq '.lastconfirmedheight')
+	chainheight=$(pbaas_call getinfo | jq '.blocks')
+	delta=$(echo "$chainheight - $verusnotarization" | bc)
+	echo $delta
+elif [ $2 == "verusnotarizationdelta" ]; then
+	chainnotarization=$(pbaas_call getnotarizationdata vrsc | jq '.lastconfirmedheight')
+	vrscheight=$($verus getinfo | jq '.blocks')
+	delta=$(echo "$vrscheight - $chainnotarization" | bc)
+	echo $delta
 elif [ $2 == "totalforkscheck" ]; then
 	verustotalforks=$($verus getnotarizationdata $pbaas_chain | jq '.forks | length')
-	chaintotalforks=$(pbaas_call getnotarizationdata vrsctest | jq '.forks | length')
+	chaintotalforks=$(pbaas_call getnotarizationdata vrsc | jq '.forks | length')
 	if [ $verustotalforks -gt 1 ] || [ $chaintotalforks -gt 1 ]; then
 		echo 1
 	else
@@ -71,5 +81,3 @@ elif [ $2 == "hashcheck" ]; then
 else
     echo "Invalid call"
 fi
-
-
