@@ -67,6 +67,9 @@ if api_auth; then
     cp /etc/zabbix/zabbix_agentd.conf.d/auth-hashcheck.sh /etc/zabbix/zabbix_agentd.conf.d/verus-hashdiff.sh
     cp /etc/zabbix/zabbix_agentd.conf.d/verus-daemon-auth.conf /etc/zabbix/zabbix_agentd.conf.d/verus-daemon.conf
     echo "Authenticated API checks configured, modify /etc/zabbix/zabbix_agentd.conf.d/verus-api-curl-auth.sh to match your access credentials"
+else;
+    rm /etc/zabbix/zabbix_agentd.conf.d/auth-hashcheck.sh 
+    rm /etc/zabbix/zabbix_agentd.conf.d/verus-daemon-auth.conf 
 fi
 
 
