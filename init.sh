@@ -7,10 +7,15 @@
 
 #Specify if verus or verustest, this assumes standard config - e.g. /home/verus/bin/verus for mainnet
 #and /home/verustest/bin/verustest for testnet
-#Also requires specifying th IP for the zabbix server
 
+# Also requires specifying th IP for the zabbix server
 zabbixserverip=
+# Verus type selection.
+# NOTE: Testnet not fully tested in current revisions, may break or not work properly. 
 verustype="verus"
+# If using the authenticated API endpoints, specify here. Otherwise will not include authenticated versions
+# of hash and height checks. Defaults to unauthenticated
+api_auth=false
 if [ ${verustype} == "verus" ]; then
     datadir="VRSC"
     sitecheck="https://api.verus.services"
@@ -57,6 +62,13 @@ chown zabbix:zabbix /etc/zabbix/zabbix_agentd.conf.d
 cp -r ./configs/* /etc/zabbix/zabbix_agentd.conf.d
 cp -r ./scripts/* /etc/zabbix/zabbix_agentd.conf.d
 chmod +x /etc/zabbix/zabbix_agentd.conf.d/*.sh
+
+if api_auth; then
+    cp /etc/zabbix/zabbix_agentd.conf.d/auth-hashcheck.sh /etc/zabbix/zabbix_agentd.conf.d/verus-hashdiff.sh
+    cp /etc/zabbix/zabbix_agentd.conf.d/verus-daemon-auth.conf /etc/zabbix/zabbix_agentd.conf.d/verus-daemon.conf
+    echo "Authenticated API checks configured, modify /etc/zabbix/zabbix_agentd.conf.d/verus-api-curl-auth.sh to match your access credentials"
+fi
+
 
 
 # Finish up
