@@ -3,7 +3,7 @@ set -euo pipefail
 
 url=${VERUS_API_URL:-https://api.verus.services/} # authenticated endpoint
 app_id=${VERUS_APP_ID:-zabbix} # Change to reflect your key
-key_file=${VERUS_API_KEY_FILE:-./zabbix-api.key}
+key_file=${VERUS_API_KEY_FILE:-./zabbix-api.key} # Change to where your key is located and secured
 body=${1:?Usage: verus-api-curl-auth.sh 'JSON request body'}
 auth=$(python3 -c '
 import hashlib
